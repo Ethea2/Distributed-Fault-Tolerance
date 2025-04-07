@@ -3,12 +3,21 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	port := os.Getenv("PORT")
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -17,5 +26,6 @@ func main() {
 	})
 
 	fmt.Println("Grade service starting on :8080")
-	http.ListenAndServe(":8080", r)
+
+	http.ListenAndServe(":"+port, r)
 }
