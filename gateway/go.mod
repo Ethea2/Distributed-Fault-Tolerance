@@ -1,5 +1,5 @@
 module github.com/Ethea2/Distributed-Fault-Tolerance/gateway
 
-go 1.19
+go 1.23
 
-require github.com/go-chi/chi v1.5.5 // indirect
+require github.com/go-chi/chi/v5 v5.0.10
