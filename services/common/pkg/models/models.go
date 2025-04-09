@@ -35,3 +35,31 @@ type CourseResponse struct {
 type GeneralResponse struct {
 	Message string `json:"message"`
 }
+
+type Grade struct {
+	CourseName       string  `json:"course_name"`
+	CourseCode       string  `json:"course_code"`
+	Available        bool    `json:"available"`
+	EnrollmentStatus string  `json:"enrollment_status"`
+	Grade            float32 `json:"grade"`
+}
+
+type GradeResponse struct {
+	Grades []Grade `json:"grades"`
+}
+
+type StudentGrades struct {
+	UserID   int     `json:"user_id"`
+	Username string  `json:"username"`
+	Grades   []Grade `json:"grades"`
+}
+
+type StudentGradesResponse struct {
+	StudentGrades []StudentGrades `json:"student_grades"`
+}
+
+type ChangeGradeRequest struct {
+	UserID     int     `json:"user_id"`
+	CourseCode string  `json:"course_code"`
+	Grade      float32 `json:"grade"`
+}

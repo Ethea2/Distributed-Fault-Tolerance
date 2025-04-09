@@ -47,6 +47,45 @@ func main() {
 	r.Group(func(r chi.Router) {
 		r.Use(authMid.AuthMiddleware)
 
+		r.Get("/available_courses", func(w http.ResponseWriter, r *http.Request) {
+			user := r.Context().Value("custom_claims").(models.User)
+
+			var courses []models.Course
+
+			conn, err := database.ConnectDB()
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			sqlQuery := `
+				SELECT c.*
+				FROM courses.courses c
+				WHERE c.available = TRUE
+				AND NOT EXISTS (
+						SELECT 1
+						FROM courses.enrollments e
+						WHERE e.course_id = c.id
+						AND e.user_id = $1 
+				)
+				ORDER BY c.course_code;
+			`
+
+			rows, _ := conn.Query(context.Background(), sqlQuery, user.ID)
+
+			var course models.Course
+
+			_, err = pgx.ForEachRow(rows, []any{&course.ID, &course.CourseName, &course.CourseCode, &course.CourseDescription, &course.Availabie}, func() error {
+				courses = append(courses, course)
+				return nil
+			})
+
+			json.NewEncoder(w).Encode(models.CourseResponse{
+				Courses: courses,
+			})
+		})
+
 		r.Post("/create_course", func(w http.ResponseWriter, r *http.Request) {
 			courseReq := &models.Course{}
 
@@ -145,6 +184,6 @@ func main() {
 		})
 	})
 
-	fmt.Println("Grade service starting on :8080")
+	fmt.Println("Course service starting on :8080")
 	http.ListenAndServe(":8080", r)
 }
