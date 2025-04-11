@@ -39,8 +39,8 @@ services:
   # Authentication Service
   auth-service:
     build:
-      context: ./services/auth-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/auth-service/Dockerfile
     networks:
       - backend-network
       - db-network
@@ -54,13 +54,14 @@ services:
       - DB_SCHEMA=auth
       - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key_here}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   # Course Service
   course-service:
     build:
-      context: ./services/course-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/course-service/Dockerfile
     networks:
       - backend-network
       - db-network
@@ -74,13 +75,14 @@ services:
       - DB_SCHEMA=courses
       - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key_here}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   # Grade Service
   grade-service:
     build:
-      context: ./services/grade-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/grade-service/Dockerfile
     networks:
       - backend-network
       - db-network
@@ -94,7 +96,8 @@ services:
       - DB_SCHEMA=grades
       - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key_here}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   # PostgreSQL Database
   postgres:

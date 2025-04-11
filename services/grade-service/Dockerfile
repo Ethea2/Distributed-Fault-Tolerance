@@ -1,31 +1,30 @@
-# services/grade-service/Dockerfile
 FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Copy go mod and sum files
-COPY go.mod go.sum ./
-RUN go mod download
+# Copy common package first
+COPY services/common /app/services/common
 
-# Copy source code
-COPY . .
+# Copy this service
+COPY services/grade-service /app/services/grade-service
+
+# Work in the service directory
+WORKDIR /app/services/grade-service
+
+# Download dependencies
+RUN go mod download
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-# Use a minimal alpine image
+# Create a minimal production image
 FROM alpine:latest
-
-# Install CA certificates for HTTPS requests
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-# Copy the binary from builder
-COPY --from=builder /app/main .
+# Copy the binary from the builder stage
+COPY --from=builder /app/services/grade-service/main .
 
-# Expose port
-EXPOSE 8080
-
-# Run the binary
+# Command to run
 CMD ["./main"]

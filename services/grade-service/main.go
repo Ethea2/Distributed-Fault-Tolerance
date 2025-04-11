@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/Ethea2/Distributed-Fault-Tolerance/services/common/pkg/database"
 	authMid "github.com/Ethea2/Distributed-Fault-Tolerance/services/common/pkg/middleware"
@@ -13,9 +14,16 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	if os.Getenv("DB_HOST") == "" {
+		_ = godotenv.Load()
+	}
+
+	port := os.Getenv("PORT")
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
@@ -224,5 +232,5 @@ func main() {
 	})
 
 	fmt.Println("Grade service starting on :8080")
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":"+port, r)
 }

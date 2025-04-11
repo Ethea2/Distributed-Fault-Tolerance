@@ -16,9 +16,8 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
+	if os.Getenv("DB_HOST") == "" {
+		_ = godotenv.Load()
 	}
 
 	port := os.Getenv("PORT")
