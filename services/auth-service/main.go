@@ -63,6 +63,7 @@ func main() {
 		json.NewEncoder(w).Encode(models.ResponseToken{
 			Token:   token,
 			Message: "Success",
+			Role:    user.Role,
 		})
 	})
 

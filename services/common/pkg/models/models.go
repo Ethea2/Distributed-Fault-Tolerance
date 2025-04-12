@@ -14,6 +14,7 @@ type LoginModel struct {
 type ResponseToken struct {
 	Token   string `json:"token"`
 	Message string `json:"message"`
+	Role    string `json:"role"`
 }
 
 type Course struct {
