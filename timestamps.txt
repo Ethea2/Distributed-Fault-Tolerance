@@ -1,0 +1,11 @@
+1. Docker rundown and infrastructure set up - 1:00
+
+2. JWT and auth system + some middleware - 3:00
+
+3. MVC Implementation - 5:00
+
+4. Application demonstration - 6:50
+
+5. Nodes down testing - 11:00
+
+6. BONUS features for BONUS points - 17:40
